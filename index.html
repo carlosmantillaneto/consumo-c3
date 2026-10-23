@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C3 Live Plus 2026 - Controle de Combustível</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen p-4 md:p-8">
+
+  <div class="max-w-4xl mx-auto space-y-6">
+    <!-- Cabeçalho -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between bg-slate-800 p-5 rounded-2xl border border-slate-700">
+      <div>
+        <h1 class="text-2xl font-bold text-white">Citroën C3 Live Plus 2026</h1>
+        <p class="text-slate-400 text-sm">Tanque Oficial: <span class="text-emerald-400 font-semibold">47 Litros</span> | Motor 1.0 Firefly</p>
+      </div>
+      <span id="statusSync" class="mt-2 md:mt-0 text-xs bg-slate-700 text-slate-300 px-3 py-1.5 rounded-full w-fit">
+        Pronto para uso
+      </span>
+    </div>
+
+    <!-- Formulário + Cards em Tempo Real -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Formulário -->
+      <form id="fuelForm" class="bg-slate-800 p-6 rounded-2xl border border-slate-700 space-y-4">
+        <h2 class="text-lg font-semibold border-b border-slate-700 pb-2">Novo Abastecimento</h2>
+        
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">Combustível</label>
+          <select id="combustivel" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white">
+            <option value="Gasolina">Gasolina</option>
+            <option value="Etanol">Etanol</option>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Km Rodados (Trip)</label>
+            <input type="number" step="0.1" id="km" value="485" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white">
+          </div>
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Litros Abastecidos</label>
+            <input type="number" step="0.01" max="47" id="litros" value="38.5" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">Preço por Litro (R$)</label>
+          <input type="number" step="0.01" id="preco" value="5.89" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white">
+        </div>
+
+        <button type="submit" id="btnSalvar" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 rounded-xl transition">
+          Salvar no Google Sheets
+        </button>
+      </form>
+
+      <!-- Métricas Instantâneas -->
+      <div class="grid grid-cols-2 gap-4">
+        <div class="bg-slate-800 p-5 rounded-2xl border border-slate-700 flex flex-col justify-center">
+          <span class="text-xs text-slate-400">Consumo Exato</span>
+          <strong id="cardConsumo" class="text-3xl font-bold text-emerald-400 mt-1">12.60</strong>
+          <span class="text-xs text-slate-500">km / litro</span>
+        </div>
+        <div class="bg-slate-800 p-5 rounded-2xl border border-slate-700 flex flex-col justify-center">
+          <span class="text-xs text-slate-400">Autonomia (47L)</span>
+          <strong id="cardAutonomia" class="text-3xl font-bold text-sky-400 mt-1">592</strong>
+          <span class="text-xs text-slate-500">km com tanque cheio</span>
+        </div>
+        <div class="bg-slate-800 p-5 rounded-2xl border border-slate-700 flex flex-col justify-center">
+          <span class="text-xs text-slate-400">Sobra no Tanque</span>
+          <strong id="cardSobra" class="text-3xl font-bold text-amber-400 mt-1">8.5</strong>
+          <span class="text-xs text-slate-500">litros antes da bomba</span>
+        </div>
+        <div class="bg-slate-800 p-5 rounded-2xl border border-slate-700 flex flex-col justify-center">
+          <span class="text-xs text-slate-400">Custo por Km</span>
+          <strong id="cardCusto" class="text-3xl font-bold text-purple-400 mt-1">R$ 0.47</strong>
+          <span class="text-xs text-slate-500">por km rodado</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gráfico Comparativo Inmetro -->
+    <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700">
+      <h2 class="text-lg font-semibold mb-4">Comparativo com Médias Oficiais C3 1.0 (km/L)</h2>
+      <canvas id="graficoConsumo" height="110"></canvas>
+    </div>
+
+    <!-- Histórico da Planilha -->
+    <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 overflow-x-auto">
+      <h2 class="text-lg font-semibold mb-4">Últimos Registros (Google Sheets)</h2>
+      <table class="w-full text-left text-sm">
+        <thead class="text-xs text-slate-400 border-b border-slate-700">
+          <tr>
+            <th class="pb-2">Data</th>
+            <th class="pb-2">Combustível</th>
+            <th class="pb-2">Km</th>
+            <th class="pb-2">Litros</th>
+            <th class="pb-2">Consumo</th>
+            <th class="pb-2">Autonomia</th>
+            <th class="pb-2">R$/Km</th>
+          </tr>
+        </thead>
+        <tbody id="tabelaHistorico" class="divide-y divide-slate-700 text-slate-300">
+          <tr><td colspan="7" class="py-4 text-center text-slate-500">Configure a URL da API para carregar o histórico.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // COLE SUA URL DO GOOGLE APPS SCRIPT ABAIXO:
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz6ELYsIN3WL4wxj7zHGBVMsHbKQTyVSiUbkpfpZK-CRVghVyg3Nzgee582GuGEgF9aQg/exec';
+    const TANQUE = 47;
+
+    const kmInput = document.getElementById('km');
+    const litrosInput = document.getElementById('litros');
+    const precoInput = document.getElementById('preco');
+    const combInput = document.getElementById('combustivel');
+
+    // Inicializa o Gráfico
+    const ctx = document.getElementById('graficoConsumo').getContext('2d');
+    const chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Seu C3 Agora', 'Etanol Cidade', 'Etanol Estrada', 'Gasolina Cidade', 'Gasolina Estrada'],
+        datasets: [{
+          label: 'km/L',
+          data: [12.6, 9.3, 10.3, 13.2, 14.5],
+          backgroundColor: ['#10b981', '#64748b', '#475569', '#0ea5e9', '#0284c7'],
+          borderRadius: 6
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } },
+          y: { grid: { display: false }, ticks: { color: '#f8fafc' } }
+        }
+      }
+    });
+
+    // Atualiza cálculos e gráfico em tempo real ao digitar
+    function atualizarCalculos() {
+      const km = parseFloat(kmInput.value) || 0;
+      const litros = parseFloat(litrosInput.value) || 1;
+      const preco = parseFloat(precoInput.value) || 0;
+
+      const consumo = km / litros;
+      const autonomia = TANQUE * consumo;
+      const sobra = Math.max(0, TANQUE - litros);
+      const custoKm = consumo > 0 ? preco / consumo : 0;
+
+      document.getElementById('cardConsumo').innerText = consumo.toFixed(2);
+      document.getElementById('cardAutonomia').innerText = Math.round(autonomia);
+      document.getElementById('cardSobra').innerText = sobra.toFixed(1);
+      document.getElementById('cardCusto').innerText = 'R$ ' + custoKm.toFixed(2);
+
+      chart.data.datasets[0].data[0] = +consumo.toFixed(2);
+      chart.update();
+    }
+
+    [kmInput, litrosInput, precoInput].forEach(el => el.addEventListener('input', atualizarCalculos));
+
+    // Envia os dados para o Google Sheets (POST sem bloqueio de CORS)
+    document.getElementById('fuelForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (SCRIPT_URL.includes('COLE_SUA_URL')) {
+        alert('Substitua a variável SCRIPT_URL no código pela URL gerada no seu Apps Script!');
+        return;
+      }
+
+      const btn = document.getElementById('btnSalvar');
+      const status = document.getElementById('statusSync');
+      btn.disabled = true;
+      btn.innerText = 'Salvando...';
+      status.innerText = 'Sincronizando com Sheets...';
+
+      const payload = {
+        combustivel: combInput.value,
+        km: parseFloat(kmInput.value),
+        litros: parseFloat(litrosInput.value),
+        preco: parseFloat(precoInput.value)
+      };
+
+      try {
+        await fetch(SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+        status.innerText = 'Salvo na planilha!';
+        carregarHistorico();
+      } catch (err) {
+        status.innerText = 'Erro ao salvar';
+        console.error(err);
+      } finally {
+        btn.disabled = false;
+        btn.innerText = 'Salvar no Google Sheets';
+      }
+    });
+
+    // Busca histórico salvo na planilha
+    async function carregarHistorico() {
+      if (SCRIPT_URL.includes('COLE_SUA_URL')) return;
+      try {
+        const res = await fetch(SCRIPT_URL);
+        const dados = await res.json();
+        const tbody = document.getElementById('tabelaHistorico');
+        if (!dados.length) {
+          tbody.innerHTML = '<tr><td colspan="7" class="py-4 text-center text-slate-500">Nenhum abastecimento registrado ainda.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = dados.map(d => `
+          <tr>
+            <td class="py-2.5">${d.data}</td>
+            <td>${d.combustivel}</td>
+            <td>${d.km} km</td>
+            <td>${d.litros} L</td>
+            <td class="font-semibold text-emerald-400">${d.consumo} km/L</td>
+            <td>${d.autonomia} km</td>
+            <td>R$ ${d.custoKm}</td>
+          </tr>
+        `).join('');
+      } catch (e) {
+        console.error('Erro ao ler histórico:', e);
+      }
+    }
+
+    atualizarCalculos();
+    carregarHistorico();
+  </script>
+</body>
+</html>
