@@ -23,28 +23,28 @@
 
   <div class="max-w-5xl mx-auto space-y-8">
     
-    <!-- Top Bar Estilo Editorial Automotivo -->
+    <!-- Top Bar Atualizada (v1.0.0) -->
     <header class="bg-white border-crisp p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div class="flex items-start gap-4">
         <div class="w-1.5 h-12 bg-citroen-red"></div>
         <div>
           <div class="flex items-center gap-2">
-            <span class="text-[11px] font-bold tracking-widest uppercase text-neutral-400">SPEC // BR-2026</span>
-            <span class="text-[11px] mono bg-neutral-100 px-2 py-0.5 font-semibold">47 LITROS</span>
+            <span class="text-[11px] font-bold tracking-widest uppercase text-neutral-400">SPEC // V1.0.0</span>
+            <span id="badgeAtual" class="text-[11px] mono bg-neutral-100 px-2 py-0.5 font-semibold uppercase">ATUAL: --</span>
           </div>
-          <h1 class="text-2xl md:text-3xl font-bold tracking-tight mt-0.5">Citroën C3 Live Plus 1.0</h1>
+          <h1 class="text-2xl md:text-3xl font-bold tracking-tight mt-0.5">C3 - Abastecimento</h1>
         </div>
       </div>
       <div class="flex items-center gap-2 self-start md:self-center border border-neutral-200 px-3 py-1.5 bg-[#FAF9F6]">
         <span class="w-2 h-2 rounded-full bg-emerald-600" id="dotSync"></span>
-        <span id="statusSync" class="text-xs font-medium uppercase tracking-wider text-neutral-600 mono">SISTEMA PRONTO</span>
+        <span id="statusSync" class="text-xs font-medium uppercase tracking-wider text-neutral-600 mono">ONLINE</span>
       </div>
     </header>
 
-    <!-- Grid Principal: Telemetria (4 colunas) + Input -->
+    <!-- Grid Principal: Telemetria + Input -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
       
-      <!-- Formulário de Registro (4 colunas no Desktop) -->
+      <!-- Formulário de Registro -->
       <form id="fuelForm" class="lg:col-span-5 bg-white border-crisp p-6 flex flex-col justify-between space-y-5">
         <div>
           <div class="flex justify-between items-center border-b border-neutral-200 pb-3 mb-5">
@@ -56,243 +56,4 @@
             <div>
               <label class="block text-xs font-semibold uppercase tracking-wider text-neutral-500 mb-1.5">Matriz Energética</label>
               <select id="combustivel" class="w-full bg-[#FAF9F6] border border-neutral-300 px-3.5 py-2.5 text-sm font-medium transition">
-                <option value="Gasolina">Gasolina Comum / Aditivada</option>
-                <option value="Etanol">Etanol Hidratado</option>
-              </select>
-            </div>
-
-            <div class="grid grid-cols-2 gap-4">
-              <div>
-                <label class="block text-xs font-semibold uppercase tracking-wider text-neutral-500 mb-1.5">Hodômetro (Km)</label>
-                <input type="number" step="0.1" id="km" value="485" required class="w-full bg-[#FAF9F6] border border-neutral-300 px-3.5 py-2.5 text-base mono font-bold transition">
-              </div>
-              <div>
-                <label class="block text-xs font-semibold uppercase tracking-wider text-neutral-500 mb-1.5">Volume (Litros)</label>
-                <input type="number" step="0.01" max="47" id="litros" value="38.5" required class="w-full bg-[#FAF9F6] border border-neutral-300 px-3.5 py-2.5 text-base mono font-bold transition">
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-xs font-semibold uppercase tracking-wider text-neutral-500 mb-1.5">Valor Unitário (R$ / L)</label>
-              <input type="number" step="0.01" id="preco" value="5.89" required class="w-full bg-[#FAF9F6] border border-neutral-300 px-3.5 py-2.5 text-base mono font-bold transition">
-            </div>
-          </div>
-        </div>
-
-        <button type="submit" id="btnSalvar" class="w-full bg-citroen-red text-white text-xs font-bold uppercase tracking-widest py-4 transition cursor-pointer">
-          Registrar Telemetria no Sheets →
-        </button>
-      </form>
-
-      <!-- Painel de Indicadores (7 colunas no Desktop) -->
-      <div class="lg:col-span-7 grid grid-cols-2 gap-4">
-        
-        <div class="bg-white border-crisp p-6 flex flex-col justify-between">
-          <div class="flex justify-between items-start">
-            <span class="text-xs font-bold uppercase tracking-widest text-neutral-400">Rendimento Real</span>
-            <span class="text-[11px] mono text-neutral-400">KM/L</span>
-          </div>
-          <div class="my-4">
-            <strong id="cardConsumo" class="text-4xl md:text-5xl font-bold mono tracking-tight">12.60</strong>
-          </div>
-          <div class="text-xs text-neutral-500 border-t border-neutral-100 pt-2">Cálculo direto: Trip ÷ Volume</div>
-        </div>
-
-        <div class="bg-white border-crisp p-6 flex flex-col justify-between">
-          <div class="flex justify-between items-start">
-            <span class="text-xs font-bold uppercase tracking-widest text-neutral-400">Alcance (47L)</span>
-            <span class="text-[11px] mono text-neutral-400">KM MAX</span>
-          </div>
-          <div class="my-4">
-            <strong id="cardAutonomia" class="text-4xl md:text-5xl font-bold mono tracking-tight">592</strong>
-          </div>
-          <div class="text-xs text-neutral-500 border-t border-neutral-100 pt-2">Projeção para tanque 100% cheio</div>
-        </div>
-
-        <div class="bg-white border-crisp p-6 flex flex-col justify-between">
-          <div class="flex justify-between items-start">
-            <span class="text-xs font-bold uppercase tracking-widest text-neutral-400">Reserva no Tanque</span>
-            <span class="text-[11px] mono text-neutral-400">LITROS</span>
-          </div>
-          <div class="my-4">
-            <strong id="cardSobra" class="text-4xl md:text-5xl font-bold mono tracking-tight">8.5</strong>
-          </div>
-          <div class="text-xs text-neutral-500 border-t border-neutral-100 pt-2">Combustível restante antes de parar</div>
-        </div>
-
-        <div class="bg-white border-crisp p-6 flex flex-col justify-between">
-          <div class="flex justify-between items-start">
-            <span class="text-xs font-bold uppercase tracking-widest text-neutral-400">Custo Rodagem</span>
-            <span class="text-[11px] mono text-neutral-400">BRL/KM</span>
-          </div>
-          <div class="my-4">
-            <strong id="cardCusto" class="text-4xl md:text-5xl font-bold mono tracking-tight citroen-red">R$ 0.47</strong>
-          </div>
-          <div class="text-xs text-neutral-500 border-t border-neutral-100 pt-2">Desembolso por quilômetro</div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- Gráfico Comparativo Inmetro -->
-    <section class="bg-white border-crisp p-6">
-      <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-neutral-200 pb-3 mb-5">
-        <h2 class="text-xs font-bold uppercase tracking-widest text-neutral-500">02 / Benchmark Oficial Inmetro (PBEV - Motor 1.0 Firefly)</h2>
-        <span class="text-xs mono text-neutral-400">VERMELHO = SEU REGISTRO ATUAL</span>
-      </div>
-      <canvas id="graficoConsumo" height="95"></canvas>
-    </section>
-
-    <!-- Tabela de Histórico -->
-    <section class="bg-white border-crisp p-6 overflow-x-auto">
-      <div class="flex justify-between items-center border-b border-neutral-200 pb-3 mb-4">
-        <h2 class="text-xs font-bold uppercase tracking-widest text-neutral-500">03 / Livro de Bordo (Google Sheets DB)</h2>
-        <span class="text-xs mono text-neutral-400">ÚLTIMOS 15 REGISTROS</span>
-      </div>
-      <table class="w-full text-left text-sm">
-        <thead class="text-[11px] font-bold uppercase tracking-wider text-neutral-400 border-b border-neutral-200">
-          <tr>
-            <th class="py-3">Data / Hora</th>
-            <th class="py-3">Matriz</th>
-            <th class="py-3">Distância</th>
-            <th class="py-3">Abastecido</th>
-            <th class="py-3">Média Real</th>
-            <th class="py-3">Autonomia 47L</th>
-            <th class="py-3">Custo/Km</th>
-          </tr>
-        </thead>
-        <tbody id="tabelaHistorico" class="divide-y divide-neutral-200 mono text-xs">
-          <tr><td colspan="7" class="py-6 text-center text-neutral-400">Aguardando conexão com o Google Apps Script...</td></tr>
-        </tbody>
-      </table>
-    </section>
-
-  </div>
-
-  <script>
-    // COLE SUA URL DO GOOGLE APPS SCRIPT ABAIXO (MANTENHA AS ASPAS SIMPLES):
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz6ELYsIN3WL4wxj7zHGBVMsHbKQTyVSiUbkpfpZK-CRVghVyg3Nzgee582GuGEgF9aQg/exec';
-    const TANQUE = 47;
-
-    const kmInput = document.getElementById('km');
-    const litrosInput = document.getElementById('litros');
-    const precoInput = document.getElementById('preco');
-    const combInput = document.getElementById('combustivel');
-
-    // Gráfico Editorial (Vermelho Citroën vs Cinza Técnico)
-    const ctx = document.getElementById('graficoConsumo').getContext('2d');
-    const chart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['SEU C3 AGORA', 'ETANOL URBANO', 'ETANOL RODOVIÁRIO', 'GASOLINA URBANO', 'GASOLINA RODOVIÁRIO'],
-        datasets: [{
-          label: 'km/L',
-          data: [12.6, 9.3, 10.3, 13.2, 14.5],
-          backgroundColor: ['#E1251B', '#D4D4D0', '#A3A39E', '#52524E', '#111111'],
-          borderRadius: 0,
-          barThickness: 22
-        }]
-      },
-      options: {
-        indexAxis: 'y',
-        plugins: { legend: { display: false } },
-        scales: {
-          x: { grid: { color: '#EEEDE8' }, ticks: { color: '#52524E', font: { family: 'JetBrains Mono', size: 11 } } },
-          y: { grid: { display: false }, ticks: { color: '#111111', font: { family: 'JetBrains Mono', size: 11, weight: 'bold' } } }
-        }
-      }
-    });
-
-    function atualizarCalculos() {
-      const km = parseFloat(kmInput.value) || 0;
-      const litros = parseFloat(litrosInput.value) || 1;
-      const preco = parseFloat(precoInput.value) || 0;
-
-      const consumo = km / litros;
-      const autonomia = TANQUE * consumo;
-      const sobra = Math.max(0, TANQUE - litros);
-      const custoKm = consumo > 0 ? preco / consumo : 0;
-
-      document.getElementById('cardConsumo').innerText = consumo.toFixed(2);
-      document.getElementById('cardAutonomia').innerText = Math.round(autonomia);
-      document.getElementById('cardSobra').innerText = sobra.toFixed(1);
-      document.getElementById('cardCusto').innerText = 'R$ ' + custoKm.toFixed(2);
-
-      chart.data.datasets[0].data[0] = +consumo.toFixed(2);
-      chart.update();
-    }
-
-    [kmInput, litrosInput, precoInput].forEach(el => el.addEventListener('input', atualizarCalculos));
-
-    document.getElementById('fuelForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      if (SCRIPT_URL.includes('COLE_SUA_URL')) {
-        alert('Coloque a URL do seu Apps Script dentro das aspas simples na variável SCRIPT_URL!');
-        return;
-      }
-
-      const btn = document.getElementById('btnSalvar');
-      const status = document.getElementById('statusSync');
-      const dot = document.getElementById('dotSync');
-      btn.disabled = true;
-      btn.innerText = 'TRANSMITINDO DADOS...';
-      status.innerText = 'GRAVANDO NO SHEETS...';
-      dot.className = 'w-2 h-2 rounded-full bg-amber-500 animate-ping';
-
-      const payload = {
-        combustivel: combInput.value,
-        km: parseFloat(kmInput.value),
-        litros: parseFloat(litrosInput.value),
-        preco: parseFloat(precoInput.value)
-      };
-
-      try {
-        await fetch(SCRIPT_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(payload)
-        });
-        status.innerText = 'SINCRONIZADO';
-        dot.className = 'w-2 h-2 rounded-full bg-emerald-600';
-        carregarHistorico();
-      } catch (err) {
-        status.innerText = 'ERRO DE CONEXÃO';
-        dot.className = 'w-2 h-2 rounded-full bg-red-600';
-        console.error(err);
-      } finally {
-        btn.disabled = false;
-        btn.innerText = 'Registrar Telemetria no Sheets →';
-      }
-    });
-
-    async function carregarHistorico() {
-      if (SCRIPT_URL.includes('COLE_SUA_URL')) return;
-      try {
-        const res = await fetch(SCRIPT_URL);
-        const dados = await res.json();
-        const tbody = document.getElementById('tabelaHistorico');
-        if (!dados.length) {
-          tbody.innerHTML = '<tr><td colspan="7" class="py-6 text-center text-neutral-400">Sem registros na planilha ainda.</td></tr>';
-          return;
-        }
-        tbody.innerHTML = dados.map(d => `
-          <tr class="hover:bg-[#FAF9F6]">
-            <td class="py-3 text-neutral-500">${d.data}</td>
-            <td class="font-semibold">${d.combustivel}</td>
-            <td>${d.km} km</td>
-            <td>${d.litros} L</td>
-            <td class="font-bold citroen-red">${d.consumo} km/L</td>
-            <td>${d.autonomia} km</td>
-            <td>R$ ${d.custoKm}</td>
-          </tr>
-        `).join('');
-      } catch (e) {
-        console.error('Erro ao ler histórico:', e);
-      }
-    }
-
-    atualizarCalculos();
-    carregarHistorico();
-  </script>
-</body>
-</html>
+                <option value="Gasolina">Gasolina Comum / Aditivada
